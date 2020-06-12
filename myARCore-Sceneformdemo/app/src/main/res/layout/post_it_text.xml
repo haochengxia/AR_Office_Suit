@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/postItNoteTextView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:maxLines="1000"
+    android:textSize="4sp"
+    android:fontFamily="@font/attack_of_the_cucumbers"
+    android:textColor="@android:color/black"
+    android:textStyle="bold"
+    android:singleLine="false"
+    android:ellipsize="none"
+    android:inputType="textMultiLine"
+    tools:ignore="TextViewEdits" />
+
+
+<!--    app:autoSizeMaxTextSize="4dp"-->
+<!--    app:autoSizeMinTextSize="0.5dp"-->
+<!--    app:autoSizeTextType="uniform"-->
