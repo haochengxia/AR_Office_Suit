@@ -26,7 +26,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -58,7 +57,6 @@ import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -92,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public  static String commandRes;
     public  static String oldMessage="";
     public static String taskState = "todo";
-    private ViewRenderable solarControlsRenderable;
+    private ViewRenderable controlCenterRenderable;
     // True once scene is loaded
     private boolean hasFinishedLoading = false;
     public int counter = 0;
-    CompletableFuture<ViewRenderable> solarControlsStage;
+    CompletableFuture<ViewRenderable> controlCenterStage;
     public String TAG="MainActivity";
     private int port = 22;
 
@@ -116,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragment = (ArFragment)
                 getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
         // Build a renderable from a 2D View.
-        solarControlsStage=
-                ViewRenderable.builder().setView(this, R.layout.solar_controls).build();
+        controlCenterStage=
+                ViewRenderable.builder().setView(this, R.layout.control_center).build();
 
         //on tapping of the scene, we want to interact with the world
         mFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> mGestureDetector.onTouchEvent(motionEvent));
@@ -138,14 +136,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
 
-        CompletableFuture.allOf(solarControlsStage).handle((notUsed, throwable) -> {
+        CompletableFuture.allOf(controlCenterStage).handle((notUsed, throwable) -> {
 
             if (throwable != null) {
                 DemoUtils.displayError(this, "Unable to load renderable", throwable);
                 return null;
             }
             try {
-                solarControlsRenderable = solarControlsStage.get();
+                controlCenterRenderable = controlCenterStage.get();
 
                 // Everything finished loading successfully.
                 hasFinishedLoading = true;
@@ -370,11 +368,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int localCounter = counter;
             //monitorTag.setText("1");
             counter++;
-            Node solarControls = new Node();
-            solarControls.setParent(monitoritNode);
-            solarControls.setRenderable(solarControlsRenderable);
-            solarControls.setLocalPosition(new Vector3(-0.5f, 1.25f, 0.0f));
-            solarControls.setLocalRotation(new Quaternion(0.0f, -0.65f, 0f, 0.65f));
+            Node controlCenter = new Node();
+            controlCenter.setParent(monitoritNode);
+            controlCenter.setRenderable(controlCenterRenderable);
+            controlCenter.setLocalPosition(new Vector3(-0.5f, 1.25f, 0.0f));
+            controlCenter.setLocalRotation(new Quaternion(0.0f, -0.65f, 0f, 0.65f));
             //add text view node
             ViewRenderable.builder().setView(this, R.layout.post_it_text).build()
                     .thenAccept(viewRenderable -> {
@@ -407,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (nodeInstance.getRenderable() instanceof ViewRenderable) {
                                 tv = ((ViewRenderable) nodeInstance.getRenderable()).getView().findViewById(R.id.postItNoteTextView);
                                 try {
-                                    if ((ViewRenderable) nodeInstance.getRenderable() == solarControlsStage.get()) continue;
+                                    if ((ViewRenderable) nodeInstance.getRenderable() == controlCenterStage.get()) continue;
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 } catch (ExecutionException e) {
